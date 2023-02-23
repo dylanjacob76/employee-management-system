@@ -67,7 +67,20 @@ const viewEmployees = () => {
 };
 
 const addDepartment = () => {
-
+  inquirer
+    .prompt({
+      name: "name",
+      type: "input",
+      message: "What is the name of the department you'd like to add?"
+    })
+    .then(answer => {
+      const query = "INSERT INTO department SET ?";
+      connection.query(query, answer, (err, res) => {
+        if (err) throw err;
+        console.log(`${answer}, has been successfully added!`)
+        init();
+      })
+    })
 };
 
 const addRole = () => {
