@@ -49,11 +49,21 @@ const viewDepartments = () => {
 };
 
 const viewRoles = () => {
-
+  const query = "SELECT * FROM role";
+  connection.query(query, (err, roles) => {
+    if (err) throw err;
+    console.table(roles);
+    init();
+  });
 };
 
 const viewEmployees = () => {
-
+  const query = "SELECT * FROM employee";
+  connection.query(query, (err, employees) => {
+    if (err) throw err;
+    console.table(employees);
+    init();
+  })
 };
 
 const addDepartment = () => {
