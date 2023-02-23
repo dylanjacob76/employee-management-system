@@ -5,18 +5,14 @@ require("console.table");
 const connection = mysql.createConnection({
   host: "localhost",
 
-  // Your port; if not 3306
   port: 3306,
 
-  // Your username
   user: "root",
 
-  // Your password
   password: "",
   database: "management_systemDB",
 });
 
-// function which prompts the user for what action they should take
 const init = () => {
   inquirer
     .prompt({
@@ -114,7 +110,27 @@ const addRole = () => {
 };
 
 const addEmployee = () => {
-
+  inquirer
+    .prompt([
+      {
+        name: "first_name",
+        type: "input",
+        message: "What is the first name of the new employee you'd like to add?"
+      },
+      {
+        name: "last_name",
+        type: "input",
+        message: "What is the last name of the new employee you'd like to add?"
+      }
+    ])
+    .then(answer => {
+      const query = "INSERT INTO employee SET ?";
+      connection.query(query, answer, (err, newRole) => {
+        if (err) throw err;
+        console.log(`\n${answer.first_name} ${answer.last_name} has been successfully added!\n`);
+        init();
+      });
+    });
 };
 
 const updateEmployee = () => {
@@ -123,9 +139,7 @@ const updateEmployee = () => {
 
 
 
-// connect to the mysql server and sql database
 connection.connect(err => {
   if (err) throw err;
-  // run the init function after the connection is made to prompt the user=
   init();
 })
