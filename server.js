@@ -54,7 +54,12 @@ const viewRoles = () => {
 };
 
 const viewEmployees = () => {
-  const query = "SELECT * FROM employee";
+  const query = `
+  SELECT employee.id, employee.first_name, employee.last_name, role.title, department.department_name, role.salary FROM employee 
+  LEFT JOIN role 
+  ON employee.role_id = role.id 
+  LEFT JOIN department 
+  ON department.id = role.department_id;`;
   connection.query(query, (err, employees) => {
     if (err) throw err;
     console.table(employees);
@@ -86,6 +91,11 @@ const addRole = () => {
       name: "title",
       type: "input",
       message: "What is the name of the role you'd like to add?"
+    },
+    {
+      name: "department_id",
+      type: "input",
+      message: "What is the new roles department ID?"
     },
     {
       name: "salary",
@@ -121,6 +131,11 @@ const addEmployee = () => {
         name: "last_name",
         type: "input",
         message: "What is the last name of the new employee you'd like to add?"
+      },
+      {
+        name: "role_id",
+        type: "input",
+        message: "What is the new employees role ID?"
       }
     ])
     .then(answer => {
@@ -134,10 +149,28 @@ const addEmployee = () => {
 };
 
 const updateEmployeeRole = () => {
-
+  inquirer
+    .prompt([
+      {
+        name: "updatedEmployee",
+        type: "input",
+        message: "Enter the id of the employee you wish to update: "
+      },
+      {
+        name: "updatedRole",
+        type: "input",
+        message: "Enter the role ID you would like assigned to your updated employee: "
+      }
+    ])
+    .then(answer => {
+      const query = `UPDATE employee SET role_id = ${answer.updatedRole} WHERE id = ${answer.updatedEmployee}`;
+      connection.query(query, (err, res) => {
+        if (err) throw err; 
+        console.log("\nEmployee role successfully updated!\n");
+        init();
+      })
+    })
 };
-
-
 
 connection.connect(err => {
   if (err) throw err;
