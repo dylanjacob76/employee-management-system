@@ -75,16 +75,42 @@ const addDepartment = () => {
     })
     .then(answer => {
       const query = "INSERT INTO department SET ?";
-      connection.query(query, answer, (err, res) => {
+      connection.query(query, answer, (err, newDepartment) => {
         if (err) throw err;
-        console.log(`${answer}, has been successfully added!`)
+        console.log(`\n${answer}, has been successfully added!\n`)
         init();
-      })
-    })
+      });
+    });
 };
 
 const addRole = () => {
-
+  inquirer
+    .prompt([
+      {
+      name: "title",
+      type: "input",
+      message: "What is the name of the role you'd like to add?"
+    },
+    {
+      name: "salary",
+      type: "input",
+      message: "What is the salary for the new role?",
+      validate(value) {
+        if (isNaN(value) === false) {
+          return true;
+        }
+        return false;
+      },
+    }
+  ])
+  .then(answer => {
+    const query = "INSERT INTO role SET ?";
+    connection.query(query, answer, (err, newRole) => {
+      if (err) throw err;
+      console.log(`\n${answer.title} with a salary of ${answer.salary}, has been successfully added!\n`);
+      init();
+    });
+  });
 };
 
 const addEmployee = () => {
