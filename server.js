@@ -1,5 +1,6 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
+require("console.table");
 
 const connection = mysql.createConnection({
   host: "localhost",
@@ -36,6 +37,39 @@ const init = () => {
     .then(answer => {
       answer.action();
     });
+};
+
+const viewDepartments = () => {
+  const query = "SELECT * FROM department";
+  connection.query(query, (err, departments) => {
+    if (err) throw err;
+    console.table(departments);
+    init();
+  });
+};
+
+const viewRoles = () => {
+
+};
+
+const viewEmployees = () => {
+
+};
+
+const addDepartment = () => {
+
+};
+
+const addRole = () => {
+
+};
+
+const addEmployee = () => {
+
+};
+
+const updateEmployee = () => {
+
 };
 
 
